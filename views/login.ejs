@@ -1,0 +1,18 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+    <h2>Login</h2>
+    <form action="/login" method="POST">
+        <div class="mb-3">
+            <label for="epost" class="form-label">Email</label>
+            <input type="email" class="form-control" id="epost" name="epost" required>
+        </div>
+        <div class="mb-3">
+            <label for="passord" class="form-label">Password</label>
+            <input type="password" class="form-control" id="passord" name="passord" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+
+<%- include('partials/footer') %>
