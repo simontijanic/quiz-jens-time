@@ -8,63 +8,68 @@ const database = require('./config/database');
 
 const quizzesToSeed = [
   {
-    title: "Nginx & Express Fundamentals",
-    description: "Test your knowledge on configuring Nginx as a reverse proxy for Express.js applications.",
+    title: "Nginx & Express Grunnleggende",
+    description: "Test kunnskapen din om å konfigurere Nginx som en reverse proxy for Express.js-applikasjoner.",
     category: "Web Utvikling",
     isPublished: true, // Added this line
     questions: [
       {
-        questionText: "What is the primary role of Nginx when used with an Express.js application?",
+        questionText: "Hva er hovedrollen til Nginx når den brukes sammen med en Express.js-applikasjon?",
         questionType: "multiple-choice",
-        options: ["Serving static files directly", "Acting as a database server", "As a reverse proxy and load balancer", "Writing server-side application logic"],
+        options: [
+          "Servere statiske filer direkte",
+          "Fungere som en databaseserver",
+          "Som en reverse proxy og lastbalanserer",
+          "Skrive server-side applikasjonslogikk"
+        ],
         correctAnswer: "2", 
         points: 1
       },
       {
-        questionText: "In an Nginx configuration, which directive is used to pass requests to a backend Express server?",
+        questionText: "Hvilket Nginx-direktiv brukes for å sende forespørsler til en backend Express-server?",
         questionType: "multiple-choice",
         options: ["server_name", "listen", "location", "proxy_pass"],
         correctAnswer: "3", 
         points: 1
       },
       {
-        questionText: "True or False: Express.js can handle SSL/TLS termination itself, but it's often recommended to offload it to Nginx.",
+        questionText: "Sant eller usant: Express.js kan håndtere SSL/TLS-terminering selv, men det anbefales ofte å overlate dette til Nginx.",
         questionType: "true-false",
-        options: ["True", "False"], 
+        options: ["Sant", "Usant"], 
         correctAnswer: "true",
         points: 1
       }
     ]
   },
   {
-    title: "Node.js and DNS Concepts (BIND9)",
-    description: "Explore concepts related to Node.js networking and DNS with BIND9.",
+    title: "Node.js og DNS-konsepter (BIND9)",
+    description: "Utforsk konsepter relatert til Node.js-nettverk og DNS med BIND9.",
     category: "Nettverk",
     isPublished: true, // Added this line
     questions: [
       {
-        questionText: "Which Node.js module is primarily used for DNS-related operations like lookups?",
+        questionText: "Hvilket Node.js-modul brukes hovedsakelig for DNS-relaterte operasjoner som oppslag?",
         questionType: "multiple-choice",
         options: ["http", "dns", "net", "fs"],
         correctAnswer: "1", 
         points: 1
       },
       {
-        questionText: "What type of DNS record maps a domain name to an IPv4 address in BIND9 configurations?",
+        questionText: "Hvilken type DNS-post kobler et domenenavn til en IPv4-adresse i BIND9-konfigurasjoner?",
         questionType: "multiple-choice",
         options: ["MX", "CNAME", "A", "AAAA"],
         correctAnswer: "2", 
         points: 1
       },
       {
-        questionText: "BIND9 is a popular open-source software for running a DNS server. (True/False)",
+        questionText: "BIND9 er en populær åpen kildekode-programvare for å kjøre en DNS-server. (Sant/Usant)",
         questionType: "true-false",
-        options: ["True", "False"],
+        options: ["Sant", "Usant"],
         correctAnswer: "true",
         points: 1
       },
       {
-        questionText: "What is the default port for DNS queries?",
+        questionText: "Hva er standardporten for DNS-forespørsler?",
         questionType: "text-input",
         options: [], 
         correctAnswer: "53",
@@ -73,34 +78,34 @@ const quizzesToSeed = [
     ]
   },
   {
-    title: "Cisco Packet Tracer Essentials",
-    description: "A quiz on the basic functionalities and uses of Cisco Packet Tracer.",
+    title: "Cisco Packet Tracer Grunnleggende",
+    description: "En quiz om de grunnleggende funksjonene og bruksområdene til Cisco Packet Tracer.",
     category: "Nettverk",
     isPublished: true, // Added this line
     questions: [
       {
-        questionText: "Cisco Packet Tracer is primarily a _______ tool.",
+        questionText: "Cisco Packet Tracer er først og fremst et _______ verktøy.",
         questionType: "multiple-choice",
-        options: ["Text editor", "Network simulation", "Database management", "Video editing"],
+        options: ["Teksteditor", "Nettverkssimulering", "Databaseadministrasjon", "Videoredigering"],
         correctAnswer: "1", 
         points: 1
       },
       {
-        questionText: "Can you configure VLANs on switches in Cisco Packet Tracer? (True/False)",
+        questionText: "Kan du konfigurere VLAN-er på svitsjer i Cisco Packet Tracer? (Sant/Usant)",
         questionType: "true-false",
-        options: ["True", "False"],
+        options: ["Sant", "Usant"],
         correctAnswer: "true",
         points: 1
       },
       {
-        questionText: "Which mode in Packet Tracer allows you to send test packets (PDUs) between devices to test connectivity?",
+        questionText: "Hvilken modus i Packet Tracer lar deg sende testpakker (PDUer) mellom enheter for å teste tilkobling?",
         questionType: "multiple-choice",
-        options: ["Realtime Mode", "Simulation Mode", "Logical View", "Physical View"],
+        options: ["Realtime-modus", "Simuleringsmodus", "Logisk visning", "Fysisk visning"],
         correctAnswer: "1", 
         points: 1
       },
       {
-        questionText: "What is the file extension for Cisco Packet Tracer activity files?",
+        questionText: "Hva er filendelsen for Cisco Packet Tracer-aktivitetsfiler?",
         questionType: "text-input",
         options: [],
         correctAnswer: ".pka",

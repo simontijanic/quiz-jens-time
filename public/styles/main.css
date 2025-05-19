@@ -18,6 +18,8 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   border: none;
   padding: 0;
+  border-radius: 18px;
+  word-break: break-word;
 }
 .kahoot-option input[type="radio"] {
   display: none;
@@ -41,10 +43,77 @@
   margin: 0;
   padding: 1.2rem 0;
   border-radius: 18px;
+  word-break: break-word;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .options.kahoot-grid {
+    grid-template-columns: 1fr;
+  }
+  .kahoot-option {
+    font-size: 1rem;
+    min-height: 56px;
+  }
 }
 
 @media (max-width: 600px) {
   .options.kahoot-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .kahoot-option {
+    min-height: 56px;
+    font-size: 1rem;
+    border-radius: 12px;
+    padding: 8px 0;
+  }
+  .card-body, .card {
+    padding: 10px !important;
+  }
+  .container, .container-fluid {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+  .kahoot-option label {
+    padding: 0.8rem 0.2rem;
+    font-size: 0.98rem;
+  }
+  .kahoot-option {
+    min-height: 44px;
+    font-size: 0.98rem;
+  }
+  .card {
+    margin-bottom: 1.2rem;
+  }
+  .btn, .btn-primary, .btn-secondary {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+  h1, h2, h3, h4, h5 {
+    font-size: 1.2em;
+  }
+}
+
+/* Make tables and cards scrollable on small screens */
+@media (max-width: 600px) {
+  .table-responsive, .card-body {
+    overflow-x: auto;
+  }
+}
+
+/* Utility for better spacing on mobile */
+@media (max-width: 600px) {
+  .mb-4, .my-5, .mt-5 {
+    margin-bottom: 1rem !important;
+    margin-top: 1rem !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .kahoot-option {
+    font-size: 0.95rem;
+    min-height: 44px;
+    border-radius: 8px;
   }
 }

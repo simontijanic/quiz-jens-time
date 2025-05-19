@@ -5,11 +5,11 @@
         <div class="col-md-8 offset-md-2">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h3>Quiz Results: <%= quiz.title %></h3>
+                    <h3>Resultat: <%= quiz.title %></h3>
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-4">
-                        <h4>Your Score</h4>
+                        <h4>Din poengsum</h4>
                         <div class="display-1 fw-bold mb-3"><%= score %>/<%= totalQuestions %></div>
                         <div class="progress mb-3" style="height: 30px;">
                             <div class="progress-bar <%= percentage >= 70 ? 'bg-success' : percentage >= 40 ? 'bg-warning' : 'bg-danger' %>" 
@@ -22,17 +22,17 @@
                             </div>
                         </div>
                         <% if(percentage >= 70) { %>
-                            <p class="lead text-success">Great job! 🎉</p>
+                            <p class="lead text-success">Bra jobbet! 🎉</p>
                         <% } else if(percentage >= 40) { %>
-                            <p class="lead text-warning">Not bad, but there's room for improvement.</p>
+                            <p class="lead text-warning">Ikke verst, men det er rom for forbedring.</p>
                         <% } else { %>
-                            <p class="lead text-danger">You might want to study more and try again.</p>
+                            <p class="lead text-danger">Du bør kanskje studere mer og prøve igjen.</p>
                         <% } %>
                     </div>
 
                     <hr>
 
-                    <h4 class="mb-4">Question Review</h4>
+                    <h4 class="mb-4">Gjennomgang av spørsmål</h4>
                     
                     <% quiz.questions.forEach(function(question, qIndex) { 
                         var userAnswer = userAnswers[qIndex];
@@ -41,11 +41,11 @@
                     %>
                         <div class="card mb-4 <%= isCorrect ? 'border-success' : 'border-danger' %>">
                             <div class="card-header <%= isCorrect ? 'bg-success' : 'bg-danger' %> text-white">
-                                <h5>Question <%= qIndex + 1 %>: <%= question.questionText %></h5>
+                                <h5>Spørsmål <%= qIndex + 1 %>: <%= question.questionText %></h5>
                                 <% if(isCorrect) { %>
-                                    <span class="badge bg-white text-success">Correct</span>
+                                    <span class="badge bg-white text-success">Riktig</span>
                                 <% } else { %>
-                                    <span class="badge bg-white text-danger">Incorrect</span>
+                                    <span class="badge bg-white text-danger">Feil</span>
                                 <% } %>
                             </div>
                             <div class="card-body">
@@ -62,7 +62,7 @@
                                             <span class="<%= String(oIndex) === String(correctAnswer) ? 'fw-bold text-success' : (String(oIndex) === String(userAnswer) && String(oIndex) !== String(correctAnswer)) ? 'text-danger' : '' %>">
                                                 <%= option %>
                                                 <% if(String(oIndex) === String(correctAnswer)) { %>
-                                                    (Correct Answer)
+                                                    (Riktig svar)
                                                 <% } %>
                                             </span>
                                         </div>
@@ -80,7 +80,7 @@
                                             <span class="<%= val === String(correctAnswer).toLowerCase() ? 'fw-bold text-success' : (val === String(userAnswer).toLowerCase() && val !== String(correctAnswer).toLowerCase()) ? 'text-danger' : '' %>">
                                                 <%= val === 'true' ? 'Sant' : 'Usant' %>
                                                 <% if(val === String(correctAnswer).toLowerCase()) { %>
-                                                    (Correct Answer)
+                                                    (Riktig svar)
                                                 <% } %>
                                             </span>
                                         </div>
@@ -95,7 +95,7 @@
                                         <span class="<%= userAnswer && userAnswer.trim().toLowerCase() === String(correctAnswer).trim().toLowerCase() ? 'fw-bold text-success' : 'text-danger' %>">
                                             <%= userAnswer %>
                                         </span>
-                                        <span class="ms-2 text-muted">(Correct: <%= correctAnswer %>)</span>
+                                        <span class="ms-2 text-muted">(Riktig: <%= correctAnswer %>)</span>
                                     </div>
                                 <% } %>
                             </div>
@@ -103,8 +103,8 @@
                     <% }); %>
                     
                     <div class="d-grid gap-2 mt-4">
-                        <a href="/quiz/<%= quiz._id %>" class="btn btn-primary">Try Again</a>
-                        <a href="/quizzes" class="btn btn-secondary">Back to All Quizzes</a>
+                        <a href="/quiz/<%= quiz._id %>" class="btn btn-primary">Prøv igjen</a>
+                        <a href="/quizzes" class="btn btn-secondary">Tilbake til alle quizer</a>
                     </div>
                 </div>
             </div>
