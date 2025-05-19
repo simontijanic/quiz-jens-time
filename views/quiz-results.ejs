@@ -1,0 +1,115 @@
+<%- include('partials/header') %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>Quiz Results: <%= quiz.title %></h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h4>Your Score</h4>
+                        <div class="display-1 fw-bold mb-3"><%= score %>/<%= totalQuestions %></div>
+                        <div class="progress mb-3" style="height: 30px;">
+                            <div class="progress-bar <%= percentage >= 70 ? 'bg-success' : percentage >= 40 ? 'bg-warning' : 'bg-danger' %>" 
+                                role="progressbar" 
+                                style="width: <%= percentage %>%" 
+                                aria-valuenow="<%= percentage %>" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100">
+                                <%= percentage %>%
+                            </div>
+                        </div>
+                        <% if(percentage >= 70) { %>
+                            <p class="lead text-success">Great job! 🎉</p>
+                        <% } else if(percentage >= 40) { %>
+                            <p class="lead text-warning">Not bad, but there's room for improvement.</p>
+                        <% } else { %>
+                            <p class="lead text-danger">You might want to study more and try again.</p>
+                        <% } %>
+                    </div>
+
+                    <hr>
+
+                    <h4 class="mb-4">Question Review</h4>
+                    
+                    <% quiz.questions.forEach(function(question, qIndex) { 
+                        var userAnswer = userAnswers[qIndex];
+                        var correctAnswer = correctAnswers[qIndex];
+                        var isCorrect = isCorrectArray[qIndex];
+                    %>
+                        <div class="card mb-4 <%= isCorrect ? 'border-success' : 'border-danger' %>">
+                            <div class="card-header <%= isCorrect ? 'bg-success' : 'bg-danger' %> text-white">
+                                <h5>Question <%= qIndex + 1 %>: <%= question.questionText %></h5>
+                                <% if(isCorrect) { %>
+                                    <span class="badge bg-white text-success">Correct</span>
+                                <% } else { %>
+                                    <span class="badge bg-white text-danger">Incorrect</span>
+                                <% } %>
+                            </div>
+                            <div class="card-body">
+                                <% if(question.questionType === 'multiple-choice') { %>
+                                    <% question.options.forEach(function(option, oIndex) { %>
+                                        <div class="mb-2 d-flex align-items-center">
+                                            <% if(String(oIndex) === String(correctAnswer)) { %>
+                                                <span class="badge bg-success me-2">✓</span>
+                                            <% } else if(String(oIndex) === String(userAnswer) && String(oIndex) !== String(correctAnswer)) { %>
+                                                <span class="badge bg-danger me-2">✗</span>
+                                            <% } else { %>
+                                                <span class="badge bg-light me-2">&nbsp;</span>
+                                            <% } %>
+                                            <span class="<%= String(oIndex) === String(correctAnswer) ? 'fw-bold text-success' : (String(oIndex) === String(userAnswer) && String(oIndex) !== String(correctAnswer)) ? 'text-danger' : '' %>">
+                                                <%= option %>
+                                                <% if(String(oIndex) === String(correctAnswer)) { %>
+                                                    (Correct Answer)
+                                                <% } %>
+                                            </span>
+                                        </div>
+                                    <% }); %>
+                                <% } else if(question.questionType === 'true-false') { %>
+                                    <% ['true', 'false'].forEach(function(val) { %>
+                                        <div class="mb-2 d-flex align-items-center">
+                                            <% if(val === String(correctAnswer).toLowerCase()) { %>
+                                                <span class="badge bg-success me-2">✓</span>
+                                            <% } else if(val === String(userAnswer).toLowerCase() && val !== String(correctAnswer).toLowerCase()) { %>
+                                                <span class="badge bg-danger me-2">✗</span>
+                                            <% } else { %>
+                                                <span class="badge bg-light me-2">&nbsp;</span>
+                                            <% } %>
+                                            <span class="<%= val === String(correctAnswer).toLowerCase() ? 'fw-bold text-success' : (val === String(userAnswer).toLowerCase() && val !== String(correctAnswer).toLowerCase()) ? 'text-danger' : '' %>">
+                                                <%= val === 'true' ? 'Sant' : 'Usant' %>
+                                                <% if(val === String(correctAnswer).toLowerCase()) { %>
+                                                    (Correct Answer)
+                                                <% } %>
+                                            </span>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <div class="mb-2 d-flex align-items-center">
+                                        <% if(userAnswer && userAnswer.trim().toLowerCase() === String(correctAnswer).trim().toLowerCase()) { %>
+                                            <span class="badge bg-success me-2">✓</span>
+                                        <% } else { %>
+                                            <span class="badge bg-danger me-2">✗</span>
+                                        <% } %>
+                                        <span class="<%= userAnswer && userAnswer.trim().toLowerCase() === String(correctAnswer).trim().toLowerCase() ? 'fw-bold text-success' : 'text-danger' %>">
+                                            <%= userAnswer %>
+                                        </span>
+                                        <span class="ms-2 text-muted">(Correct: <%= correctAnswer %>)</span>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }); %>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="/quiz/<%= quiz._id %>" class="btn btn-primary">Try Again</a>
+                        <a href="/quizzes" class="btn btn-secondary">Back to All Quizzes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

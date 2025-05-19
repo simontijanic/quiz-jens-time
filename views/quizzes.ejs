@@ -1,0 +1,41 @@
+<%- include('partials/header') %>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">All Quizzes</h1>
+            
+            <% if (quizzes && quizzes.length > 0) { %>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <% quizzes.forEach(quiz => { %>
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= quiz.title %></h5>
+                                    <p class="card-text text-muted"><small>Created by: <%= quiz.creator ? `${quiz.creator.fornavn} ${quiz.creator.etternavn}` : 'Unknown' %></small></p>
+                                    <p class="card-text"><%= quiz.description %></p>
+                                    <p class="card-text"><small class="text-muted"><%= quiz.questions.length %> questions</small></p>
+                                </div>
+                                <div class="card-footer bg-transparent border-top-0">
+                                    <a href="/quiz/<%= quiz._id %>" class="btn btn-primary w-100">Take Quiz</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info">
+                    <p>No quizzes available at the moment. Check back later!</p>
+                </div>
+            <% } %>
+            
+            <% if (locals.user) { %>
+                <div class="text-center mt-5">
+                    <a href="/create-quiz" class="btn btn-primary btn-lg">Create Your Own Quiz</a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

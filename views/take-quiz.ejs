@@ -1,0 +1,61 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+    <h1><%= quiz.title %></h1>
+    <p class="lead"><%= quiz.description %></p>
+    <p><small class="text-muted">Kategori: <%= quiz.category %> | Laget av: <%= quiz.creator.fornavn %> <%= quiz.creator.etternavn %></small></p>
+
+    <form id="quizForm" action="/quiz/<%= quiz._id %>/submit" method="POST">
+        <div class="questions">
+            <% quiz.questions.forEach((question, index) => { %>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Spørsmål <%= index + 1 %> (<%= question.points %> poeng)</h5>
+                        <p class="card-text"><%= question.questionText %></p>
+
+                        <% if (question.questionType === 'multiple-choice') { %>
+                            <div class="options">
+                                <% question.options.forEach((option, optionIndex) => { %>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" 
+                                               name="answers[<%= index %>]" 
+                                               id="q<%= index %>_opt<%= optionIndex %>"
+                                               value="<%= optionIndex %>" required>
+                                        <label class="form-check-label" for="q<%= index %>_opt<%= optionIndex %>">
+                                            <%= option %>
+                                        </label>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        <% } else if (question.questionType === 'true-false') { %>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" 
+                                       name="answers[<%= index %>]" 
+                                       id="q<%= index %>_true"
+                                       value="true" required>
+                                <label class="form-check-label" for="q<%= index %>_true">Sant</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" 
+                                       name="answers[<%= index %>]" 
+                                       id="q<%= index %>_false"
+                                       value="false">
+                                <label class="form-check-label" for="q<%= index %>_false">Usant</label>
+                            </div>
+                        <% } else { %>
+                            <div class="form-group">
+                                <input type="text" class="form-control" 
+                                       name="answers[<%= index %>]"
+                                       placeholder="Skriv ditt svar her" required>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-4">Lever Quiz</button>
+    </form>
+</div>
+
+<%- include('partials/footer') %>

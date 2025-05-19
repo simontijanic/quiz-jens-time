@@ -1,0 +1,315 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+    <h1>Lag ny quiz</h1>
+    <form id="quizForm" action="/create-quiz" method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">Tittel</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+            <small class="form-text text-muted">Skriv inn en tittel for quizen (påkrevd).</small>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Beskrivelse</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
+            <small class="form-text text-muted">Kort beskrivelse av hva quizen handler om (påkrevd).</small>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Kategori</label>
+            <select class="form-control" id="category" name="category" required>
+                <option value="">Velg kategori</option>
+                <option value="Programmering">Programmering</option>
+                <option value="Nettverk">Nettverk</option>
+                <option value="Datasikkerhet">Datasikkerhet</option>
+                <option value="Database">Database</option>
+                <option value="Web Utvikling">Web Utvikling</option>
+                <option value="Andre">Andre</option>
+            </select>
+            <small class="form-text text-muted">Velg en kategori for quizen (påkrevd).</small>
+        </div>
+
+        <div id="questions">
+            <h3>Spørsmål</h3>
+            <div class="question-container mb-4"> <!-- Container for Question 0 -->
+                <div class="mb-3">
+                    <label class="form-label">Spørsmålstekst</label>
+                    <input type="text" class="form-control" name="questions[0][questionText]" required>
+                    <small class="form-text text-muted">Skriv inn selve spørsmålet (påkrevd).</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Type</label>
+                    <select class="form-control question-type" name="questions[0][questionType]" required onchange="updateQuestionFields(this)">
+                        <option value="multiple-choice">Flervalg</option>
+                        <option value="true-false">Sant/Usant</option>
+                        <option value="text-input">Fritekst</option>
+                    </select>
+                    <small class="form-text text-muted">Velg hvilken type spørsmål dette er (påkrevd).</small>
+                </div>
+                <div class="options-container">
+                    <label class="form-label">Alternativer</label>
+                    <div class="options-list">
+                        <!-- Initial options for Question 0 will be added by JS -->
+                    </div>
+                    <small class="form-text text-muted">Legg til 2-4 svaralternativer (påkrevd for flervalg).</small>
+                    <button type="button" class="btn btn-secondary btn-sm add-option mt-2">Legg til alternativ</button>
+                </div>
+                <div class="mb-3 correct-answer-container"> <!-- This is the "Riktig svar" container for Question 0 -->
+                    <label class="form-label">Riktig svar</label>
+                    <select class="form-control" name="questions[0][correctAnswer]" required>
+                        <option value="">Velg riktig svar</option>
+                    </select>
+                    <small class="form-text text-muted">Velg eller skriv inn riktig svar (påkrevd).</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Poeng</label>
+                    <input type="number" class="form-control" name="questions[0][points]" value="1" required min="1">
+                    <small class="form-text text-muted">Hvor mange poeng dette spørsmålet gir (påkrevd, må være et tall større enn 0).</small>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary mb-3" onclick="addQuestion()">Legg til spørsmål</button>
+        <button type="submit" class="btn btn-primary mb-3">Lagre Quiz</button>
+    </form>
+</div>
+
+<script>
+let questionCount = 0; // Start at 0 for the first question
+
+function generateOptionHTML(questionIndex, optionIndex, value = '') {
+    return `
+        <div class="option input-group mb-2">
+            <input type="text" class="form-control" name="questions[${questionIndex}][options][]" placeholder="Alternativ ${optionIndex + 1}" value="${value}">
+            <button type="button" class="btn btn-danger btn-sm remove-option">Fjern</button>
+        </div>
+    `;
+}
+
+function updateOptionButtonStates(questionContainer) {
+    const optionsList = questionContainer.querySelector('.options-list');
+    const addOptionButton = questionContainer.querySelector('.add-option');
+    const optionElements = optionsList.querySelectorAll('.option');
+    const numOptions = optionElements.length;
+
+    if (addOptionButton) {
+        addOptionButton.disabled = numOptions >= 4;
+    }
+
+    optionElements.forEach(optionEl => {
+        const removeButton = optionEl.querySelector('.remove-option');
+        if (removeButton) {
+            removeButton.style.display = numOptions > 2 ? '' : 'none';
+        }
+    });
+}
+
+function addOptionHandler(button) {
+    const questionContainer = button.closest('.question-container');
+    const optionsList = questionContainer.querySelector('.options-list');
+    const questionIndexMatch = questionContainer.querySelector('[name*="[questionText]"]').name.match(/\d+/);
+    if (!questionIndexMatch) return;
+    const questionIndex = parseInt(questionIndexMatch[0]);
+
+    if (optionsList.children.length < 4) {
+        const newOptionIndex = optionsList.children.length;
+        optionsList.insertAdjacentHTML('beforeend', generateOptionHTML(questionIndex, newOptionIndex));
+        updateCorrectAnswerOptionsForContainer(questionContainer);
+        updateOptionButtonStates(questionContainer);
+    }
+}
+
+function removeOptionHandler(button) {
+    const questionContainer = button.closest('.question-container');
+    const optionsList = questionContainer.querySelector('.options-list');
+    
+    if (optionsList.children.length > 2) {
+        button.closest('.option').remove();
+        // Re-index placeholders if needed, though dynamic placeholders in generateOptionHTML might be better
+        optionsList.querySelectorAll('.option input').forEach((input, index) => {
+            input.placeholder = `Alternativ ${index + 1}`;
+        });
+        updateCorrectAnswerOptionsForContainer(questionContainer);
+        updateOptionButtonStates(questionContainer);
+    }
+}
+
+function addQuestion() {
+    questionCount++; // Increment for the new question index
+    const questionsDiv = document.getElementById('questions');
+
+    // Correctly add <hr> as a sibling to question containers
+    const hrSeparator = document.createElement('hr');
+    questionsDiv.appendChild(hrSeparator);
+
+    const newQuestion = document.createElement('div');
+    newQuestion.className = 'question-container mb-4';
+    newQuestion.innerHTML = `
+        <div class="mb-3">
+            <label class="form-label">Spørsmålstekst</label>
+            <input type="text" class="form-control" name="questions[${questionCount}][questionText]" required>
+            <small class="form-text text-muted">Skriv inn selve spørsmålet (påkrevd).</small>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Type</label>
+            <select class="form-control question-type" name="questions[${questionCount}][questionType]" required onchange="updateQuestionFields(this)">
+                <option value="multiple-choice" selected>Flervalg</option>
+                <option value="true-false">Sant/Usant</option>
+                <option value="text-input">Fritekst</option>
+            </select>
+            <small class="form-text text-muted">Velg hvilken type spørsmål dette er (påkrevd).</small>
+        </div>
+        <div class="options-container">
+            <label class="form-label">Alternativer</label>
+            <div class="options-list">
+                <!-- Options will be added by updateQuestionFields -->
+            </div>
+            <small class="form-text text-muted">Legg til 2-4 svaralternativer (påkrevd for flervalg).</small>
+            <button type="button" class="btn btn-secondary btn-sm add-option mt-2">Legg til alternativ</button>
+        </div>
+        <div class="mb-3 correct-answer-container">
+            <label class="form-label">Riktig svar</label>
+            <select class="form-control" name="questions[${questionCount}][correctAnswer]" required>
+                <option value="">Velg riktig svar</option>
+            </select>
+            <small class="form-text text-muted">Velg eller skriv inn riktig svar (påkrevd).</small>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Poeng</label>
+            <input type="number" class="form-control" name="questions[${questionCount}][points]" value="1" required min="1">
+            <small class="form-text text-muted">Hvor mange poeng dette spørsmålet gir (påkrevd, må være et tall større enn 0).</small>
+        </div>
+    `;
+    questionsDiv.appendChild(newQuestion);
+    initializeQuestionEventListeners(newQuestion);
+    // Manually trigger updateQuestionFields for the new question to set it up
+    const newSelect = newQuestion.querySelector('.question-type');
+    if (newSelect) {
+        updateQuestionFields(newSelect);
+    }
+}
+
+function updateCorrectAnswerOptionsForContainer(container) {
+    const optionsList = container.querySelector('.options-list');
+    const correctAnswerSelect = container.querySelector('.correct-answer-container select');
+    if (!correctAnswerSelect) return;
+
+    const currentCorrectAnswerValue = correctAnswerSelect.value;
+    correctAnswerSelect.innerHTML = '<option value="">Velg riktig svar</option>'; // Clear existing
+
+    optionsList.querySelectorAll('.option input').forEach((input, index) => {
+        const optionText = input.value.trim() || input.placeholder || `Alternativ ${index + 1}`;
+        const optionElement = document.createElement('option');
+        optionElement.value = index.toString(); // Assuming 0-based index for correct answer
+        optionElement.textContent = optionText;
+        if (currentCorrectAnswerValue === index.toString()) {
+            optionElement.selected = true;
+        }
+        correctAnswerSelect.appendChild(optionElement);
+    });
+}
+
+function updateQuestionFields(selectElement) {
+    const container = selectElement.closest('.question-container');
+    const optionsContainer = container.querySelector('.options-container');
+    const optionsList = container.querySelector('.options-list');
+    const correctAnswerContainer = container.querySelector('.correct-answer-container');
+    
+    const questionIndexMatch = selectElement.name.match(/\d+/);
+    if (!questionIndexMatch) return;
+    const questionIndex = parseInt(questionIndexMatch[0]);
+    const correctAnswerName = `questions[${questionIndex}][correctAnswer]`;
+
+    // Clear previous dynamic content
+    optionsList.innerHTML = '';
+    correctAnswerContainer.innerHTML = ''; // Clear previous correct answer UI
+
+    if (selectElement.value === 'multiple-choice') {
+        optionsContainer.style.display = 'block';
+        correctAnswerContainer.innerHTML = `
+            <label class="form-label">Riktig svar</label>
+            <select class="form-control" name="${correctAnswerName}" required>
+                <option value="">Velg riktig svar</option>
+            </select>
+        `;
+        // Add minimum 2 options
+        optionsList.insertAdjacentHTML('beforeend', generateOptionHTML(questionIndex, 0));
+        optionsList.insertAdjacentHTML('beforeend', generateOptionHTML(questionIndex, 1));
+        
+        updateCorrectAnswerOptionsForContainer(container);
+    } else if (selectElement.value === 'true-false') {
+        optionsContainer.style.display = 'none';
+        correctAnswerContainer.innerHTML = `
+            <label class="form-label">Riktig svar</label>
+            <select class="form-control" name="${correctAnswerName}" required>
+                <option value="">Velg riktig svar</option>
+                <option value="true">Sant</option>
+                <option value="false">Usant</option>
+            </select>
+        `;
+    } else if (selectElement.value === 'text-input') {
+        optionsContainer.style.display = 'none';
+        correctAnswerContainer.innerHTML = `
+            <label class="form-label">Riktig svar (fritekst)</label>
+            <input type="text" class="form-control" name="${correctAnswerName}" required placeholder="Skriv inn riktig svar">
+        `;
+    }
+    updateOptionButtonStates(container);
+
+    // Event listener for option text changes to update correct answer dropdown
+    optionsList.removeEventListener('input', handleOptionInputChange); // Remove old if any
+    optionsList.addEventListener('input', handleOptionInputChange);
+}
+
+function handleOptionInputChange(event) {
+    if (event.target.matches('.option input')) {
+        const questionContainer = event.target.closest('.question-container');
+        updateCorrectAnswerOptionsForContainer(questionContainer);
+    }
+}
+
+function initializeQuestionEventListeners(questionContainer) {
+    const questionTypeSelect = questionContainer.querySelector('.question-type');
+    if (questionTypeSelect) {
+        questionTypeSelect.addEventListener('change', function() {
+            updateQuestionFields(this);
+        });
+        // Initial call to set up fields based on default selection
+        // updateQuestionFields(questionTypeSelect); // This will be called in addQuestion or DOMContentLoaded
+    }
+
+    const addOptionButton = questionContainer.querySelector('.add-option');
+    if (addOptionButton) {
+        addOptionButton.addEventListener('click', function() {
+            addOptionHandler(this);
+        });
+    }
+
+    // Event delegation for remove option buttons
+    const optionsList = questionContainer.querySelector('.options-list');
+    if (optionsList) {
+         optionsList.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-option')) {
+                removeOptionHandler(event.target);
+            }
+        });
+        // Also listen for input changes on options to update correct answer dropdown
+        optionsList.addEventListener('input', handleOptionInputChange);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const firstQuestionContainer = document.querySelector('.question-container');
+    if (firstQuestionContainer) {
+        initializeQuestionEventListeners(firstQuestionContainer);
+        // Manually trigger updateQuestionFields for the first question to set it up
+        const firstSelect = firstQuestionContainer.querySelector('.question-type');
+        if (firstSelect) {
+            updateQuestionFields(firstSelect);
+        }
+    }
+    // Initialize questionCount based on existing questions if any (for edit page, not strictly needed for create)
+    questionCount = document.querySelectorAll('.question-container').length -1;
+    if (questionCount < 0) questionCount = 0;
+});
+</script>
+
+<%- include('partials/footer') %>

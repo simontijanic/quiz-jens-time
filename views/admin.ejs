@@ -1,0 +1,79 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+    <h1>Admin Dashboard</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Brukere</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Navn</th>
+                                <th>E-post</th>
+                                <th>Rolle</th>
+                                <th>Handling</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% users.forEach(user => { %>
+                                <tr>
+                                    <td><%= user.fornavn %> <%= user.etternavn %></td>
+                                    <td><%= user.epost %></td>
+                                    <td><%= user.role %></td>
+                                    <td>
+                                        <form action="/admin/user/<%= user._id %>/role" method="POST" style="display: inline;">
+                                            <select name="role" class="form-select form-select-sm" onchange="this.form.submit()">
+                                                <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>Bruker</option>
+                                                <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                            </select>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Quizzer</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tittel</th>
+                                <th>Laget av</th>
+                                <th>Handling</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% quizzes.forEach(quiz => { %>
+                                <tr>
+                                    <td><%= quiz.title %></td>
+                                    <td><%= quiz.creator.fornavn %> <%= quiz.creator.etternavn %></td>
+                                    <td>
+                                        <form action="/quiz/<%= quiz._id %>" method="POST" style="display: inline;">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-danger btn-sm">Slett</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

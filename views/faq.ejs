@@ -1,0 +1,69 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+    <h1>Ofte stilte spørsmål (FAQ)</h1>
+    
+    <div class="accordion mt-4" id="faqAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                    Hvordan lager jeg en quiz?
+                </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    For å lage en quiz må du først logge inn. Deretter kan du klikke på "Lag ny quiz" knappen i dashbordet ditt. 
+                    Du kan legge til forskjellige typer spørsmål: flervalg, sant/usant, eller fritekst svar.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                    Hvilke typer spørsmål kan jeg lage?
+                </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Du kan lage tre typer spørsmål:
+                    <ul>
+                        <li>Flervalgsoppgaver - med flere svaralternativer</li>
+                        <li>Sant/Usant - enkle ja/nei spørsmål</li>
+                        <li>Fritekst - hvor deltakeren må skrive inn svaret</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                    Hvordan tar jeg en quiz?
+                </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Du kan ta quizzer uten å være logget inn. Bare velg en quiz fra forsiden og klikk "Start Quiz". 
+                    For å lagre resultatene dine må du være logget inn.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                    Hva gjør jeg hvis jeg finner upassende innhold?
+                </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Hvis du finner en quiz med upassende innhold, kan du rapportere den ved å klikke på "Rapporter" knappen 
+                    under quizzen. Administratorer vil gjennomgå rapporterte quizzer og ta nødvendige tiltak.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
