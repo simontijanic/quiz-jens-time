@@ -22,6 +22,91 @@ Dette prosjektet er et webbasert quiz-system inspirert av Kahoot, laget for IT-f
 - **Frontend**: EJS, Bootstrap, egen CSS for Kahoot-stil
 - **Autentisering**: JWT, sessions, cookies
 
+## ER-diagram (databasemodell)
+
+```mermaid
+erDiagram
+    User ||--o{ Quiz : lager
+    Quiz ||--o{ Question : inneholder
+    User {
+        string _id
+        string fornavn
+        string etternavn
+        string epost
+        string passord
+        string role
+    }
+    Quiz {
+        string _id
+        string title
+        string description
+        string category
+        string creator
+        Question[] questions
+    }
+    Question {
+        string questionText
+        string questionType
+        string[] options
+        string correctAnswer
+        int points
+    }
+```
+
+- En **User** kan lage flere **Quiz** (én-til-mange)
+- Hver **Quiz** har flere **Question** (innebygd i quiz-dokumentet)
+
+## Mappestruktur
+
+```
+quiz-nettsted/
+├── index.js
+├── package.json
+├── README.md
+├── seedQuizzes.js
+├── config/
+│   └── database.js
+├── controllers/
+│   ├── adminController.js
+│   ├── authController.js
+│   ├── quizController.js
+│   └── userController.js
+├── middleware/
+│   └── user.js
+├── models/
+│   ├── quizModel.js
+│   └── userModel.js
+├── public/
+│   └── styles/
+│       └── main.css
+├── routes/
+│   ├── adminRoute.js
+│   ├── authRoute.js
+│   ├── quizRoute.js
+│   └── userRoute.js
+├── utils/
+│   ├── authUtil.js
+│   ├── requireAdmin.js
+│   ├── requireAuth.js
+│   └── tokenBlacklist.js
+└── views/
+    ├── admin.ejs
+    ├── create-quiz.ejs
+    ├── faq.ejs
+    ├── index.ejs
+    ├── login.ejs
+    ├── quiz-details.ejs
+    ├── quiz-results.ejs
+    ├── quizzes.ejs
+    ├── register.ejs
+    ├── take-quiz.ejs
+    └── partials/
+        ├── footer.ejs
+        ├── header.ejs
+        ├── messages.ejs
+        └── navbar.ejs
+```
+
 ## Kom i gang
 1. Klon repoet og installer avhengigheter:
    ```
